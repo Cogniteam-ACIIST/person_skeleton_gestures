@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt install ros-humble-cv-bridge -y
+
 # Change to root directory to ensure correct placement of the workspace
 WORKDIR /
 
@@ -26,6 +28,8 @@ WORKDIR ${WORKSPACE_DIR}
 
 # Build the workspace
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
+
+COPY entrypoint.sh /entrypoint.sh
 
 # Make the entrypoint script executable
 RUN chmod +x /entrypoint.sh
