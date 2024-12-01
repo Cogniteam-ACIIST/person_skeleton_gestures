@@ -118,8 +118,7 @@ class SkeletonGestureDetector(Node):
             compressed_image_msg.data = img_msg.data                
             self.persons_skeletons_img_pub.publish(compressed_image_msg)
            
-        else:
-            self.get_logger().warn("Failed to capture frame from camera.")
+      
     
             
         except CvBridgeError as e:
