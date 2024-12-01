@@ -5,7 +5,7 @@ package_name = 'skeleton_gesture_detector'
 package_share_directory = ament_index_python.get_package_share_directory(package_name)
 
 import sys
-sys.path.append('/home/jetson/skeleton_ws/src/skeleton_gesture_detector/skeleton_gesture_detector/yolo7/')
+sys.path.append('/skeleton_ws/src/person_skeleton_gestures/skeleton_gesture_detector/skeleton_gesture_detector/yolo7/')
 # yolo7
 from torchvision import transforms
 from utils.datasets import letterbox

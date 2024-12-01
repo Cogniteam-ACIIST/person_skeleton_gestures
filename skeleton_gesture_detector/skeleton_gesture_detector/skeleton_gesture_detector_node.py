@@ -64,33 +64,23 @@ class SkeletonGestureDetector(Node):
             CompressedImage, '/persons_skeletons/compressed',
                 qos_profile_sensor_data)        
         
-        self.capture = cv2.VideoCapture(0)
+        # self.capture = cv2.VideoCapture(0)
         
-        if not self.capture.isOpened():
-            self.get_logger().error("Unable to open the camera.")
-            exit(1)
+        # if not self.capture.isOpened():
+        #     self.get_logger().error("Unable to open the camera.")
+        #     exit(1)
         
         
-        self.count = 0
-        # Timer with a frequency of 15 Hz (period = 1/15 seconds)
-        self.timer_period = 1 / 15.0
-        self.timer = self.create_timer(self.timer_period, self.timer_callback)
+        # self.count = 0
+        # # Timer with a frequency of 15 Hz (period = 1/15 seconds)
+        # self.timer_period = 1 / 15.0
+        # self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
     def image_callback(self, msg):
         
         try:          
             
-            self.cv_image = self.br.compressed_imgmsg_to_cv2(msg, 'bgr8')
-            
-        except CvBridgeError as e:
-            self.get_logger().error(f"Error converting compressed image: {e}")
-            return
-    
-    def timer_callback(self):
-        
-        ret, frame = self.capture.read()
-        if ret:           
-            
+            frame = self.br.compressed_imgmsg_to_cv2(msg, 'bgr8')
             debug_image = frame.copy()        
             skeletons = self.skeleton_detecotor.detect_skeletons(frame)
             
@@ -130,6 +120,56 @@ class SkeletonGestureDetector(Node):
            
         else:
             self.get_logger().warn("Failed to capture frame from camera.")
+    
+            
+        except CvBridgeError as e:
+            self.get_logger().error(f"Error converting compressed image: {e}")
+            return
+    
+    # def timer_callback(self):
+        
+    #     ret, frame = self.capture.read()
+    #     if ret:           
+            
+    #         debug_image = frame.copy()        
+    #         skeletons = self.skeleton_detecotor.detect_skeletons(frame)
+            
+    #         hand_raised = False
+    #         for skeleton in skeletons:                
+                
+    #             head = (int(skeleton[0][0]), int(skeleton[0][1]))
+    #             right =  (int(skeleton[10][0]), int(skeleton[10][1]))
+    #             left =(int(skeleton[9][0]), int(skeleton[9][1]))
+                
+    #             # Alternatively, you can check all in one condition
+    #             if head == (0, 0) or right == (0, 0) or left == (0, 0):
+    #                continue
+    #             str_text = ''
+    #             if left[1] < head[1] or right[1] < head[1]:
+    #                 str_text = 'true'
+    #                 hand_raised = True
+    #             else:
+    #                 print(f'{self.count} false')  
+                    
+    #             self.draw_skeleton_2d(skeleton, debug_image)
+
+    #             cv2.putText(debug_image, str_text, (200,200), 3, 3, (0,255,0), 1, lineType=cv2.LINE_AA)
+
+            
+    #         if hand_raised == True:
+    #             msg = String()
+    #             msg.data = 'hand_up'
+    #             self.gesture_detected_pub.publish(msg)
+            
+            
+    #         img_msg = self.br.cv2_to_compressed_imgmsg(debug_image)           
+    #         compressed_image_msg = CompressedImage()
+    #         compressed_image_msg.format = "jpeg"  # Set compression format
+    #         compressed_image_msg.data = img_msg.data                
+    #         self.persons_skeletons_img_pub.publish(compressed_image_msg)
+           
+    #     else:
+    #         self.get_logger().warn("Failed to capture frame from camera.")
     
     
     
