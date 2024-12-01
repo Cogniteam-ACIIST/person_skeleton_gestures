@@ -1,6 +1,6 @@
 #!/bin/bash
 # Source the ROS 2 Humble setup
-source /opt/ros/humble/setup.bash
+source /opt/ros/foxy/setup.bash
 
 # Source the workspace setup (if it exists)
 if [ -f /skeleton_ws/install/setup.bash ]; then
