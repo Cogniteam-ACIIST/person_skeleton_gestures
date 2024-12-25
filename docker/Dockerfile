@@ -1,17 +1,46 @@
-# Use the base image
-FROM cognimbus/yolo_detector:test
+ARG JETPACK_VERSION=6
+
+FROM ultralytics/ultralytics:latest-jetson-jetpack${JETPACK_VERSION}
+ARG ROS_EDITION=humble
+SHELL ["/bin/bash", "-c"]
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV WORKSPACE_DIR=/skeleton_ws
 
-# Install necessary tools
-RUN apt-get update && apt-get install -y \
-    git \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
 
-#RUN apt-get update && apt install ros-humble-cv-bridge -y
+RUN apt update  && \
+    apt install -y git && \
+    apt install -y wget && \
+    apt install -y locales    && \    
+    locale-gen en_US en_US.UTF-8   && \    
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8   && \    
+    export LANG=en_US.UTF-8   && \    
+    apt install -y software-properties-common   && \    
+    add-apt-repository universe   && \    
+    apt update && apt install curl -y   && \    
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg   && \    
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null   && \    
+    apt update   && \    
+    apt install -y tzdata  && \    
+    ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime  && \    
+    dpkg-reconfigure -f noninteractive tzdata  && \
+    if [ "$ROS_EDITION" = "foxy" ]; then \
+            apt install -y ros-foxy-ros-base python3-argcomplete; \
+            # Action A
+        elif [ "$ROS_EDITION" = "humble" ]; then \
+            apt install -y ros-humble-ros-base; \
+            # Action B
+        else \
+            exit 0 ; \
+            # Default action
+        fi && \    
+    apt install -y python3-colcon-common-extensions   && \    
+    apt install -y libboost-all-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Change to root directory to ensure correct placement of the workspace
 WORKDIR /
@@ -27,7 +56,7 @@ RUN wget -P ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detec
 WORKDIR ${WORKSPACE_DIR}
 
 # Build the workspace
-RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && colcon build --symlink-install"
+RUN /bin/bash -c "source /opt/ros/$ROS_EDITION/setup.bash && colcon build --symlink-install"
 
 COPY entrypoint.sh /entrypoint.sh
 

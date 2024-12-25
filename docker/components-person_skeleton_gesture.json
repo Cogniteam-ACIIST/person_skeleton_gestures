@@ -1,0 +1,74 @@
+{
+  "name": "ACiiST/person_skeleton_gesture_jetpack6",
+  "type": "COMPONENT_TYPE_COMPONENT",
+  "className": "Ros2Component",
+  "instanceName": "",
+  "description": "",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 9,
+    "build": ""
+  },
+  "start": "START_MODE_AUTO",
+  "environment": {
+    "name": "",
+    "ipAddress": "",
+    "state": "ENVIRONMENT_STATE_UNLOADED",
+    "message": "",
+    "progress": 0,
+    "requiredDevices": [],
+    "ports": [],
+    "hostIpAddress": "",
+    "variables": [],
+    "dockerInfo": {
+      "image": "cognimbus/aciist_person_skeletn_gestures:latest-jetson-jetpack6",
+      "containerId": "",
+      "imageSize": 0,
+      "commands": [
+        "ros2",
+        "run",
+        "skeleton_gesture_detector",
+        "skeleton_gesture_detector_node"
+      ],
+      "privileged": true,
+      "gpu": false,
+      "networkHost": false,
+      "binds": [],
+      "user": "",
+      "runtime": "nvidia",
+      "portBindings": {},
+      "mounts": []
+    },
+    "log": "",
+    "convertedCommands": "",
+    "onExit": "IGNORE"
+  },
+  "parameters": {
+    "parameters": []
+  },
+  "state": "COMPONENT_STATE_UNLOADED",
+  "message": "",
+  "streams": {
+    "inputStreams": [],
+    "outputStreams": []
+  },
+  "requiredDevices": [],
+  "ros": {
+    "baseFrame": "base_link",
+    "rate": 10,
+    "publishTfDevices": true,
+    "generatePort": false,
+    "rosMasterUri": "",
+    "rosIp": "",
+    "autoDetectIp": false,
+    "ros2DomainId": 1
+  },
+  "tags": {},
+  "category": "Algorithms/Image processing",
+  "simulation": false,
+  "pluginFile": "",
+  "license": "None",
+  "id": "b50275bc-90f1-4ae6-92c0-a718c6207c3b",
+  "uuid": "934c05dd-9a6f-4b7e-9490-eb59524b50cd"
+}
