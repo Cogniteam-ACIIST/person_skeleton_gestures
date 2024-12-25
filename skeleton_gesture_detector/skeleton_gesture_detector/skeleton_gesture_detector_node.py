@@ -1,27 +1,19 @@
 #!/usr/bin/env python3
 
 # sysytem
-import os
-import numpy as np
-import sys
 import math
-
-
 import cv2
-import matplotlib.pyplot as plt
+
 
 # ros
 import rclpy
-from rclpy.time import Time
-from rclpy.clock import Clock
 from rclpy.node import Node
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String,Int16
 from sensor_msgs.msg import Image,CompressedImage
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 from cv_bridge import CvBridge, CvBridgeError
-import ament_index_python
-from rclpy.qos import qos_profile_sensor_data, qos_profile_system_default, qos_profile_services_default
-import geometry_msgs
+from rclpy.qos import qos_profile_sensor_data
+
 
 from skeleton_gesture_detector.yolo_skeleton_detector import YoloSkeletonDetector 
    
@@ -49,9 +41,11 @@ class SkeletonGestureDetector(Node):
         
         self.skeleton_detecotor = YoloSkeletonDetector()
         # publishers
-        self.gesture_detected_pub = self.create_publisher(String, 
+        self.gesture_detected_pub = self.create_publisher(Int16, 
             "/detected_classes", 10)
-
+        
+        self.num_of_person_pub = self.create_publisher(String, 
+            "/num_of_person", 10)
         self.cv_image = None
         self.br = CvBridge()
 
@@ -76,6 +70,7 @@ class SkeletonGestureDetector(Node):
             skeletons = self.skeleton_detecotor.detect_skeletons(frame)
             
             hand_raised = False
+            self.gesture_detected_pub.publish(len(skeletons))
             for skeleton in skeletons:                
                 
                 head = (int(skeleton[0][0]), int(skeleton[0][1]))

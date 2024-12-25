@@ -31,7 +31,7 @@
         "skeleton_gesture_detector",
         "skeleton_gesture_detector_node"
       ],
-      "privileged": true,
+      "privileged": false,
       "gpu": false,
       "networkHost": false,
       "binds": [],
