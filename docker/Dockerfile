@@ -46,7 +46,7 @@ RUN apt update  && \
 WORKDIR /${WORKSPACE_DIR}/src
 
 # Clone the person_skeleton_gestures repository into the desired workspace directory
-RUN git clone -b jetpack$JETPACK_VERSION https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
+RUN git clone -b jetpack${JETPACK_VERSION} https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
     git clone -b $ROS_EDITION https://github.com/ros-perception/vision_opencv.git
 
 WORKDIR ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detector/resource
