@@ -43,20 +43,21 @@ RUN apt update  && \
     rm -rf /var/lib/apt/lists/*
 
 # Change to root directory to ensure correct placement of the workspace
-WORKDIR /
+WORKDIR /${WORKSPACE_DIR}/src
 
 # Clone the person_skeleton_gestures repository into the desired workspace directory
-RUN mkdir -p ${WORKSPACE_DIR}/src && git clone https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git ${WORKSPACE_DIR}/src/person_skeleton_gestures
+RUN git clone -b jetpack$JETPACK_VERSION https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
+    git clone -b $ROS_EDITION https://github.com/ros-perception/vision_opencv.git
 
+WORKDIR ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detector/resource
 # Download the YOLOv7 model file
-RUN wget -P ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detector/resource \
-    https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt
+RUN wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt
 
 # Set the working directory to the workspace
-WORKDIR ${WORKSPACE_DIR}
+WORKDIR /${WORKSPACE_DIR}
 
 # Build the workspace
-RUN /bin/bash -c "source /opt/ros/$ROS_EDITION/setup.bash && colcon build --symlink-install"
+RUN . /opt/ros/$ROS_EDITION/setup.sh && colcon build --symlink-install
 
 COPY entrypoint.sh /entrypoint.sh
 
