@@ -46,7 +46,7 @@ RUN apt update  && \
 WORKDIR /${WORKSPACE_DIR}/src
 
 # Clone the person_skeleton_gestures repository into the desired workspace directory
-RUN git clone -b jetpack${JETPACK_VERSION} https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
+RUN git clone -b jetpack6 https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
     git clone -b $ROS_EDITION https://github.com/ros-perception/vision_opencv.git
 
 WORKDIR ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detector/resource
@@ -55,6 +55,8 @@ RUN wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-p
 
 # Set the working directory to the workspace
 WORKDIR /${WORKSPACE_DIR}
+
+RUN python3 -m pip install setuptools==70.0.0
 
 # Build the workspace
 RUN . /opt/ros/$ROS_EDITION/setup.sh && colcon build --symlink-install
