@@ -73,32 +73,31 @@ class SkeletonGestureDetector(Node):
             num_of_person_msg = Int32()
             num_of_person_msg.data = len(skeletons)
             self.num_of_person_pub.publish(num_of_person_msg)
+
             for skeleton in skeletons:                
                 
                 head = (int(skeleton[0][0]), int(skeleton[0][1]))
                 right =  (int(skeleton[10][0]), int(skeleton[10][1]))
                 left =(int(skeleton[9][0]), int(skeleton[9][1]))
                 
-                # Alternatively, you can check all in one condition
                 if head == (0, 0) or right == (0, 0) or left == (0, 0):
                    continue
-                str_text = ''
-                if left[1] < head[1] or right[1] < head[1]:
-                    str_text = 'true'
-                    hand_raised = True
                
-                    
+                
+                if (not hand_raised) and (left[1] < head[1] or right[1] < head[1]):
+                    hand_raised = True
+                    msg = String()
+                    msg.data = 'hand_up'
+                    self.gesture_detected_pub.publish(msg)
+                    self.get_logger().info(f"find a man that his hand_up")
                 self.draw_skeleton_2d(skeleton, debug_image)
 
-                cv2.putText(debug_image, str_text, (200,200), 3, 3, (0,255,0), 1, lineType=cv2.LINE_AA)
+                
 
             
-            if hand_raised == True:
-                msg = String()
-                msg.data = 'hand_up'
-                self.gesture_detected_pub.publish(msg)
-            
-            
+            # if hand_raised == True:
+            #     cv2.putText(debug_image, 'true', (200,200), 3, 3, (0,255,0), 1, lineType=cv2.LINE_AA)
+
             img_msg = self.br.cv2_to_compressed_imgmsg(debug_image)           
             compressed_image_msg = CompressedImage()
             compressed_image_msg.format = "jpeg"  # Set compression format
