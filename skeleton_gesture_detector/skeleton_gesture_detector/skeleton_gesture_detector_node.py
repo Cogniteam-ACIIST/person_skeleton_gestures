@@ -98,10 +98,7 @@ class SkeletonGestureDetector(Node):
             # if hand_raised == True:
             #     cv2.putText(debug_image, 'true', (200,200), 3, 3, (0,255,0), 1, lineType=cv2.LINE_AA)
 
-            img_msg = self.br.cv2_to_compressed_imgmsg(debug_image)           
-            compressed_image_msg = CompressedImage()
-            compressed_image_msg.format = "jpeg"  # Set compression format
-            compressed_image_msg.data = img_msg.data                
+            compressed_image_msg:CompressedImage = self.br.cv2_to_compressed_imgmsg(debug_image,dst_format="jpeg")              
             self.persons_skeletons_img_pub.publish(compressed_image_msg)
            
       

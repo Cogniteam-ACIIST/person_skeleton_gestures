@@ -1,6 +1,7 @@
 ARG JETPACK_VERSION=6
 
 FROM ultralytics/ultralytics:latest-jetson-jetpack${JETPACK_VERSION}
+
 ARG ROS_EDITION=humble
 SHELL ["/bin/bash", "-c"]
 
@@ -46,7 +47,8 @@ RUN apt update  && \
 WORKDIR /${WORKSPACE_DIR}/src
 
 # Clone the person_skeleton_gestures repository into the desired workspace directory
-RUN git clone -b jetpack6 https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
+RUN rm -rf * && \
+    git clone -b jetpack6 https://github.com/Cogniteam-ACIIST/person_skeleton_gestures.git && \
     git clone -b $ROS_EDITION https://github.com/ros-perception/vision_opencv.git
 
 WORKDIR ${WORKSPACE_DIR}/src/person_skeleton_gestures/skeleton_gesture_detector/resource
